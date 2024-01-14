@@ -1,0 +1,22 @@
+
+.gallow
+    display: flex 
+
+.hangman
+    margin-left: -7.5rem
+    margin-top: 9rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    > *, &-hands > *, &-legs > *
+        transition: all 0.5s
+    &-body
+        margin-left: -0.1rem
+        margin-top: -5.1rem
+    &-hands, &-legs
+        display: flex
+    &-hands > *, &-legs > *, &-body, &-head
+        &.lost
+            margin-bottom: -100vh
+            height: 0
+            transform: rotate(20deg)

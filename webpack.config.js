@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.js',
+    entry: './src/script.js',
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -62,16 +62,12 @@ module.exports = {
                 to: path.resolve(__dirname, 'dist/favicon')
             },
             {
-                from: path.resolve(__dirname, './src/assets/products.json'),
-                to: path.resolve(__dirname, 'dist/products.json')
-            },
-            {
-                from: path.resolve(__dirname, './src/assets/enjoy.mp4'),
-                to: path.resolve(__dirname, 'dist/enjoy.mp4')
-            },
-            {
                 from: path.resolve(__dirname, './src/script.js'),
                 to: path.resolve(__dirname, 'dist/script.js')
+            },
+            {
+                from: path.resolve(__dirname, './src/app.js'),
+                to: path.resolve(__dirname, 'dist/app.js')
             }]
         }),
         new HtmlWebpackPlugin({
