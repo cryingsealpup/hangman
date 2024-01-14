@@ -68,6 +68,10 @@ module.exports = {
             {
                 from: path.resolve(__dirname, './src/app.js'),
                 to: path.resolve(__dirname, 'dist/app.js')
+            },
+            {
+                from: path.resolve(__dirname, './src/assets/pairs.json'),
+                to: path.resolve(__dirname, 'dist/pairs.json')
             }]
         }),
         new HtmlWebpackPlugin({
