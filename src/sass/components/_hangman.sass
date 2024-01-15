@@ -16,7 +16,6 @@
     &-hands, &-legs
         display: flex
     &-hands > *, &-legs > *, &-body, &-head
-        &.lost
-            margin-bottom: -100vh
-            height: 0
-            transform: rotate(20deg)
+        opacity: 0
+        &.show
+            opacity: 1
