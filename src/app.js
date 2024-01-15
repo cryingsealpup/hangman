@@ -8,7 +8,7 @@ const keyboard = document.createElement('div'), question = document.createElemen
       h1 = document.createElement('h1'), body = document.querySelector('body'), answer = document.createElement('div'), 
       guesses = document.createElement('div'), keys = Array.from({ length: 117 - 91 }, (_, i) => String.fromCharCode(i + 97))
 
-let correct = [], wrong = [], counter = 0, word = ''
+let correct = 0, list = [], counter = 0, word = ''
 
 keys.push(String.fromCharCode(30 + 97))
 
@@ -117,12 +117,15 @@ leftSide.append(question, answer, guesses, keyboard)
 wrapper.append(gallow, leftSide)
 body.append(h1, wrapper)
 
-keyboard.addEventListener('click', e => {
-    console.log(e.target)
-})
+const order = [head, corpus, leftHand, rightHand, leftLeg, rightLeg]
 
 
 // FUNCTIONS
+
+function processKey(key) {
+    key.disabled = true
+    checkLetter(key.textContent)
+}
 
 function setAttributes(elements) {
     elements.forEach((item) => {
@@ -134,13 +137,49 @@ function setAttributes(elements) {
 
 function getRandomWord() {
     const { q, a } = pairs[Math.floor(Math.random() * pairs.length)]
-    word = a
+    word = a.toLowerCase()
     question.textContent = q
-    answer.textContent = "_ ".repeat(word.length)
-    resetGame()
+    answer.textContent = '_ '.repeat(word.length)
+    list = Array(word.length).fill('_ ')
+    reset()
 }
 
-function resetGame() {
+function updateAnswer(mask) {
+    mask.forEach((el) => { list[el] = word[el].toUpperCase() + ' ' })
+    answer.textContent = list.join('')
+}
+
+function updateWrong() {
+    guesses.textContent = counter
+}
+
+function checkLetter(letter) {
+    if (word.toLowerCase().includes(letter)) {
+        const occurs = word.split('').reduce((a, x, i) => {
+            if (x === letter) a.push(i)
+            return a
+        }, [])
+        updateAnswer(occurs)
+        correct = +correct + +occurs.length
+    } else {
+        counter++
+        counter < 7 ? order[counter - 1].classList.add('show') : ''
+    }
+    isFinished()
+}
+
+function isFinished() {
+    if (counter > 6) {
+        
+        console.log("you lose")
+    } else if (word.length === correct) {
+        console.log("you win!")
+    } else {
+        updateWrong()
+    }
+}
+
+function reset() {
     correct = [];
     counter = 0;
     guesses.textContent = 0
@@ -160,11 +199,14 @@ function resetGame() {
 
 // LISTENERS
 document.addEventListener("keydown", (event) => {
-    if (keys.includes(event.key.toLowerCase())) {
-      //console.log(keys.find(event.key.toLowerCase()))
-            console.log(event.key.toLowerCase())
-    } else if (event.key === ' ') {
-
+    const key = event.key.toLowerCase()
+    if (keys.includes(key)) {
+        keyboard.childNodes[keys.indexOf(key)].click()
+    } else if (key === ' ') {
+        [...keyboard.childNodes].at(-1).click()
     }
-    // do something
-});
+})
+
+keyboard.addEventListener('click', e => {
+    processKey(e.target)
+})

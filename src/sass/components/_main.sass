@@ -66,7 +66,8 @@ button
     text-transform: uppercase
     font-weight: 600
     cursor: pointer
-    &.clicked, &.clicked:hover
+    &:disabled, &:disabled:hover
+        color: inherit
         box-shadow: inset 0.4rem 0.4rem 0.8rem rgb(159 159 159 / 34%), 0.1rem 0.1rem black
         cursor: default
     &:hover
@@ -78,12 +79,13 @@ button
             content: "SPACE"
 
 
-@media (max-width: 768px) 
+@media (max-width: 900px) 
     .gallow 
         max-height: 13rem
 
     .game
         flex-direction: column
+        overflow: hidden
 
     h1 
         width: 100%
@@ -95,9 +97,17 @@ button
     
     button
         &:last-child
-            width: 100%
+            width: inherit
+            flex-grow: 1
+            max-width: 15rem
 
 @media  (max-width: 360px)
     .keyboard
         padding: 0.5rem 
+    
+    button
+        width: 4rem
+        height: 2.5rem
+        &:last-child
+            max-width: 8.35rem
     
