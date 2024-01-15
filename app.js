@@ -4,11 +4,13 @@ const keyboard = document.createElement('div'), question = document.createElemen
       imgGallow = document.createElement('img'), hangman = document.createElement('div'), head = document.createElement('img'),
       hands = document.createElement('div'), leftHand = document.createElement('img'), rightHand = document.createElement('img'),
       corpus = document.createElement('img'), legs = document.createElement('div'), leftLeg = document.createElement('img'), 
-      rightLeg = document.createElement('img'), wrapper = document.createElement('div'), body = document.querySelector('body'),
-      answer = document.createElement('div'), keys = Array.from({ length: 122 - 91 }, (_, i) => String.fromCharCode(i + 97))
+      rightLeg = document.createElement('img'), wrapper = document.createElement('div'), leftSide = document.createElement('div'),
+      h1 = document.createElement('h1'), body = document.querySelector('body'), answer = document.createElement('div'), 
+      guesses = document.createElement('div'), keys = Array.from({ length: 117 - 91 }, (_, i) => String.fromCharCode(i + 97))
 
 let correct = [], wrong = [], counter = 0, word = ''
 
+keys.push(String.fromCharCode(30 + 97))
 
 keys.forEach(key => {
     const button = document.createElement("button")
@@ -63,14 +65,14 @@ setAttributes([
         val: ["./images/hand-two.svg", 'Right hand']
     },
     {
-        el: body, 
+        el: corpus, 
         attr: ['src', 'alt', 'class'], 
-        val: ["./images/hand-two.svg", 'Hangman body', 'hangman-body']
+        val: ["./images/body.svg", 'Hangman body', 'hangman-body']
     },
     {
         el: legs, 
         attr: 'class', 
-        val: 'hangman-hands '
+        val: 'hangman-legs'
     },
     {
         el: leftLeg, 
@@ -82,16 +84,38 @@ setAttributes([
         attr: ['src', 'alt'], 
         val: ["./images/leg-two.svg", 'Right leg']
     },
+    {
+        el: wrapper, 
+        attr: 'class', 
+        val: 'game'
+    },
+    {
+        el: leftSide, 
+        attr: 'class', 
+        val: 'logic'
+    },
+    {
+        el: answer, 
+        attr: 'class', 
+        val: 'answer'
+    },
+    {
+        el: guesses, 
+        attr: 'class', 
+        val: 'guesses'
+    },
 ])
 getRandomWord()
-hands.append(leftHand, rightHand)
-legs.appendChild(leftLeg, rightLeg)
-hangman.append(head, hands, body, legs)
-gallow.append(imgGallow, hangman)
 
-body.append(hangman)
-body.appendChild(question)
-body.appendChild(keyboard)
+h1.textContent = 'Hangman Game'
+
+hands.append(leftHand, rightHand)
+legs.append(leftLeg, rightLeg)
+hangman.append(head, hands, corpus, legs)
+gallow.append(imgGallow, hangman)
+leftSide.append(question, answer, guesses, keyboard)
+wrapper.append(gallow, leftSide)
+body.append(h1, wrapper)
 
 keyboard.addEventListener('click', e => {
     console.log(e.target)
@@ -103,7 +127,6 @@ keyboard.addEventListener('click', e => {
 function setAttributes(elements) {
     elements.forEach((item) => {
         typeof item.attr === 'string' ? item.el.setAttribute(item.attr, item.val) : item.attr.forEach((attr, i) => {
-            console.log(item)
             item.el.setAttribute(attr, item.val[i])
         })
     })
@@ -113,12 +136,14 @@ function getRandomWord() {
     const { q, a } = pairs[Math.floor(Math.random() * pairs.length)]
     word = a
     question.textContent = q
+    answer.textContent = "_ ".repeat(word.length)
     resetGame()
 }
 
 function resetGame() {
     correct = [];
     counter = 0;
+    guesses.textContent = 0
    // guessesText.innerText = `${wrongGuessCount} / ${maxGuesses}`;
   //  wordDisplay.innerHTML = currentWord.split("").map(() => `<li class="letter"></li>`).join("");
   //  keyboardDiv.querySelectorAll("button").forEach(btn => btn.disabled = false);
@@ -131,3 +156,15 @@ function resetGame() {
 //     keyboard.appendChild(button);
 //  //   button.addEventListener("click", (e) => initGame(e.target, String.fromCharCode(i)));
 // }
+
+
+// LISTENERS
+document.addEventListener("keydown", (event) => {
+    if (keys.includes(event.key.toLowerCase())) {
+      //console.log(keys.find(event.key.toLowerCase()))
+            console.log(event.key.toLowerCase())
+    } else if (event.key === ' ') {
+
+    }
+    // do something
+});
