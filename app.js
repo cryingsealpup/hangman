@@ -205,14 +205,13 @@ function fillModal(isWin) {
 }
 
 function isFinished() {
+    updateWrong()
     if (counter >= 6) {
         modalWrapper.classList.add('show')
         fillModal(false)
     } else if (word.length === correct) {
         modalWrapper.classList.add('show')
         fillModal(true)
-    } else {
-        updateWrong()
     }
 }
 
@@ -230,7 +229,6 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault()
     
     const key = event.key.toLowerCase()
-    console.log(key)
     if (keys.includes(key)) {
         keyboard.childNodes[keys.indexOf(key)].click()
     } else if (key === ' ') {

@@ -49,7 +49,7 @@
   }
 }
 body {
-  overflow-x: hidden;
+  overflow: hidden;
   font-family: "Inter", sans-serif;
   margin: 0;
 }
@@ -173,7 +173,6 @@ button:last-child::before {
   .keyboard {
     padding: 0.5rem;
   }
-
   button {
     width: 4rem;
     height: 2.5rem;
@@ -220,7 +219,6 @@ button:last-child::before {
   display: flex;
   align-items: center;
   top: 0;
-  left: 0;
   z-index: -1;
   opacity: 0;
   transition: opacity 0.2s ease;
@@ -242,24 +240,18 @@ button:last-child::before {
   .modal .answer {
     font-size: 1.5rem;
   }
-  .guesses {
-        font-size: 0.8rem;
+  .question, .keyboard {
+    flex-grow: 1;
+  }
+  .logic {
+    gap: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
   }
   h1 {
     padding: 0.5rem;
     font-size: 1.5rem;
-  }
-    .logic {
-    gap: 0.5rem;
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: wrap;
-      width: 100%;
-  }
-  .question, .keyboard {
-    flex-grow: 1;
-  }
-  .game {
-    gap: 1rem;
   }
 }
