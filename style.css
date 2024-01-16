@@ -253,6 +253,8 @@ button:last-child::before {
     gap: 0.5rem;
       flex-direction: row;
       align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
   }
   .question, .keyboard {
     flex-grow: 1;
