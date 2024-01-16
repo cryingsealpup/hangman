@@ -1,15 +1,23 @@
 import pairs from './pairs.json' assert { type: "json" }
 
+
+// VARIABLES REGARDING GAME
 const keyboard = document.createElement('div'), question = document.createElement('div'), gallow = document.createElement('div'),
       imgGallow = document.createElement('img'), hangman = document.createElement('div'), head = document.createElement('img'),
       hands = document.createElement('div'), leftHand = document.createElement('img'), rightHand = document.createElement('img'),
       corpus = document.createElement('img'), legs = document.createElement('div'), leftLeg = document.createElement('img'), 
       rightLeg = document.createElement('img'), wrapper = document.createElement('div'), leftSide = document.createElement('div'),
       h1 = document.createElement('h1'), body = document.querySelector('body'), answer = document.createElement('div'), 
-      guesses = document.createElement('div'), keys = Array.from({ length: 117 - 91 }, (_, i) => String.fromCharCode(i + 97))
+      guesses = document.createElement('div'), keys = Array.from({ length: 117 - 91 }, (_, i) => String.fromCharCode(i + 97)),
+      order = [head, corpus, leftHand, rightHand, leftLeg, rightLeg]
 
 let correct = 0, list = [], counter = 0, word = ''
 
+// VARIABLES REGARDING MODAL
+const modal = document.createElement('div'), modalWrapper = document.createElement('div'),
+      desc = document.createElement('div'), playAgain = document.createElement('button')
+
+// CREATE KEY BUTTONS
 keys.push(String.fromCharCode(30 + 97))
 
 keys.forEach(key => {
@@ -18,6 +26,7 @@ keys.forEach(key => {
     keyboard.appendChild(button)
 })
 
+// SET ATTRIBUTES FOR ALL ELEMENTS
 setAttributes([
     {
         el: keyboard, 
@@ -104,24 +113,41 @@ setAttributes([
         attr: 'class', 
         val: 'guesses'
     },
+    {
+        el: modal, 
+        attr: 'class', 
+        val: 'modal'
+    },
+    {
+        el: modalWrapper, 
+        attr: 'class', 
+        val: 'modal-wrapper'
+    },
+    {
+        el: desc, 
+        attr: 'class', 
+        val: 'game-over'
+    },
 ])
+
+// INIT GAME
 getRandomWord()
 
+// SET LAYOUT
 h1.textContent = 'Hangman Game'
-
+playAgain.textContent = 'Play again'
 hands.append(leftHand, rightHand)
 legs.append(leftLeg, rightLeg)
 hangman.append(head, hands, corpus, legs)
 gallow.append(imgGallow, hangman)
 leftSide.append(question, answer, guesses, keyboard)
 wrapper.append(gallow, leftSide)
-body.append(h1, wrapper)
-
-const order = [head, corpus, leftHand, rightHand, leftLeg, rightLeg]
+modal.append(desc, playAgain)
+modalWrapper.appendChild(modal)
+body.append(h1, wrapper, modalWrapper)
 
 
 // FUNCTIONS
-
 function processKey(key) {
     key.disabled = true
     checkLetter(key.textContent)
@@ -141,6 +167,7 @@ function getRandomWord() {
     question.textContent = q
     answer.textContent = '_ '.repeat(word.length)
     list = Array(word.length).fill('_ ')
+    console.log(`The answer is ${word}`)
     reset()
 }
 
@@ -168,38 +195,42 @@ function checkLetter(letter) {
     isFinished()
 }
 
+function fillModal(isWin) {
+    const congrats = document.createElement('p'), result = document.querySelector('.answer').cloneNode()
+    result.textContent = word.split('').join(' ')
+    congrats.textContent = isWin ? 'You win!' : 'You lose'
+    congrats.classList.add('modal-message')
+    document.querySelector('.game-over').append(congrats, result)
+    keyboard.childNodes.forEach(el => { el.disabled = true })
+}
+
 function isFinished() {
-    if (counter > 6) {
-        
-        console.log("you lose")
+    if (counter >= 6) {
+        modalWrapper.classList.add('show')
+        fillModal(false)
     } else if (word.length === correct) {
-        console.log("you win!")
+        modalWrapper.classList.add('show')
+        fillModal(true)
     } else {
         updateWrong()
     }
 }
 
 function reset() {
-    correct = [];
-    counter = 0;
-    guesses.textContent = 0
-   // guessesText.innerText = `${wrongGuessCount} / ${maxGuesses}`;
-  //  wordDisplay.innerHTML = currentWord.split("").map(() => `<li class="letter"></li>`).join("");
-  //  keyboardDiv.querySelectorAll("button").forEach(btn => btn.disabled = false);
-   // gameModal.classList.remove("show");
+    correct = 0, counter = 0, guesses.textContent = 0
+    modalWrapper.classList.remove('show')
+    document.querySelector('.game-over') ? document.querySelector('.game-over').innerHTML = '' : ''
+    order.forEach((el) => { el.classList.remove('show') })
+    keyboard.childNodes.forEach(el => { el.disabled = false })
 }
-
-// for (let i = 97; i <= 122; i++) {
-//     const button = document.createElement("button");
-//     button.innerText = String.fromCharCode(i);
-//     keyboard.appendChild(button);
-//  //   button.addEventListener("click", (e) => initGame(e.target, String.fromCharCode(i)));
-// }
 
 
 // LISTENERS
 document.addEventListener("keydown", (event) => {
+    event.preventDefault()
+    
     const key = event.key.toLowerCase()
+    console.log(key)
     if (keys.includes(key)) {
         keyboard.childNodes[keys.indexOf(key)].click()
     } else if (key === ' ') {
@@ -209,4 +240,9 @@ document.addEventListener("keydown", (event) => {
 
 keyboard.addEventListener('click', e => {
     processKey(e.target)
+})
+
+playAgain.addEventListener('click', e => {
+    e.preventDefault()
+    getRandomWord()
 })
