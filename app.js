@@ -11,7 +11,7 @@ const keyboard = document.createElement('div'), question = document.createElemen
       guesses = document.createElement('div'), keys = Array.from({ length: 117 - 91 }, (_, i) => String.fromCharCode(i + 97)),
       order = [head, corpus, leftHand, rightHand, leftLeg, rightLeg]
 
-let correct = 0, list = [], counter = 0, word = ''
+let correct = 0, list = [], counter = 0, word = '', prevQuestion = ''
 
 // VARIABLES REGARDING MODAL
 const modal = document.createElement('div'), modalWrapper = document.createElement('div'),
@@ -163,6 +163,11 @@ function setAttributes(elements) {
 
 function getRandomWord() {
     const { q, a } = pairs[Math.floor(Math.random() * pairs.length)]
+    if (q === prevQuestion) {
+        getRandomWord()
+        return
+    }
+    prevQuestion = q
     word = a.toLowerCase()
     question.textContent = q
     answer.textContent = '_ '.repeat(word.length)
